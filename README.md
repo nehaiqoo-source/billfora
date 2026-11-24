@@ -1,15 +1,15 @@
 # BillFora
 
-Country-aware invoice SaaS: **web now**, **desktop (Mac/Windows) next** — same login account.
+Invoice app for businesses that sell in more than one country’s tax format. The web app is ready; Mac and Windows desktop builds will use the same login.
 
-## What works today
+## What’s in this repo
 
-- Email signup / sign in (Auth.js)
-- Cloud database (Prisma + SQLite locally; switch `DATABASE_URL` to Postgres in production)
+- Email signup and sign-in (Auth.js)
+- Per-user data in Prisma (SQLite for local; set `DATABASE_URL` to Postgres for production)
 - Business setup with 15 country packs
-- Create / list / view / mark-paid invoices (per-user)
-- Free plan limit: **15 invoices / month**
-- Account page with plan stubs (Razorpay next)
+- Create, list, view, and mark invoices paid
+- Free plan: 15 invoices per month
+- `/account` shows plan stubs (Razorpay checkout not wired yet)
 
 ## Quick start
 
@@ -20,15 +20,15 @@ npx prisma migrate dev --name init
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) → **Create free account**.
+Open [http://localhost:3000](http://localhost:3000) and create an account.
 
-## Product shape
+## Surfaces
 
 | Surface | Status |
 | --- | --- |
-| Web app | Ready (this repo) |
-| Desktop Mac/Windows | Electron/Tauri wrapper + license check (same auth) |
-| Razorpay subscriptions | Stub on `/account` |
+| Web app | Ready in this repo |
+| Desktop (Mac / Windows) | Planned: Electron or Tauri wrapper with the same auth |
+| Razorpay subscriptions | Stub UI on `/account` |
 
 ## Scripts
 
@@ -36,10 +36,10 @@ Open [http://localhost:3000](http://localhost:3000) → **Create free account**.
 | --- | --- |
 | `npm run dev` | Local Next.js + API |
 | `npm run build` | Production build |
-| `npx prisma studio` | Browse DB |
+| `npx prisma studio` | Browse the database |
 
 ## Deploy
 
 1. Set `DATABASE_URL` (Postgres) and `AUTH_SECRET`
-2. `npx prisma migrate deploy`
-3. Deploy to Vercel
+2. Run `npx prisma migrate deploy`
+3. Deploy on Vercel (or similar)

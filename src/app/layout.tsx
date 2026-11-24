@@ -17,11 +17,11 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "BillFora — Country-aware invoices",
+    default: "BillFora",
     template: "%s · BillFora",
   },
   description:
-    "Country-aware invoices on web and desktop. Sign up, pick your country, bill clients in the right tax format.",
+    "Create invoices for your country’s tax labels, currency, and date format. Sign up on the web; desktop apps will use the same account.",
 };
 
 export default function RootLayout({

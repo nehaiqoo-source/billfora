@@ -79,7 +79,8 @@ export default function LoginPage() {
           Sign in
         </h1>
         <p className="mt-2 text-sm text-ink-muted">
-          Same account works on web and (soon) desktop.
+          Use the same email on the web app. Desktop apps will share this
+          login when they ship.
         </p>
         <Suspense fallback={<p className="mt-8 text-ink-muted">Loading…</p>}>
           <LoginForm />

@@ -102,7 +102,7 @@ export async function POST(req: Request) {
   });
   if (!business) {
     return NextResponse.json(
-      { error: "Set up your business profile first" },
+      { error: "Save your business profile before creating an invoice" },
       { status: 400 }
     );
   }
@@ -119,7 +119,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error:
-            "Free plan limit: 15 invoices this month. Upgrade to create more.",
+            "Free plan allows 15 invoices this month. Upgrade on the Account page when paid plans are live.",
         },
         { status: 402 }
       );

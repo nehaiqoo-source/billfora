@@ -68,7 +68,7 @@ export function AppShell({
               </p>
             ) : (
               <Link href="/setup" className="btn btn-primary text-sm py-1.5 px-3">
-                Set up business
+                Business setup
               </Link>
             )}
             {session?.user ? (

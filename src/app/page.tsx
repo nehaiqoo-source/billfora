@@ -12,7 +12,7 @@ export default function LandingPage() {
             Sign in
           </Link>
           <Link href="/signup" className="btn btn-secondary">
-            Get started
+            Create account
           </Link>
         </nav>
       </header>
@@ -24,12 +24,13 @@ export default function LandingPage() {
               BillFora
             </p>
             <h1 className="mt-5 max-w-lg text-xl leading-snug text-ink sm:text-2xl">
-              Invoices that speak your country’s language of tax, currency, and
-              law.
+              Invoices that match your country’s tax rules, currency, and date
+              format.
             </h1>
             <p className="mt-4 max-w-md text-base text-ink-muted leading-relaxed">
-              Pick India, the US, Germany, or a dozen others. Labels, GST
-              splits, date formats, and legal footnotes follow automatically.
+              Choose India, the US, Germany, or another supported country when
+              you set up. The app applies that country’s labels (GSTIN, VAT,
+              EIN), tax split where needed, and footer note.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn btn-primary">
@@ -73,7 +74,7 @@ export default function LandingPage() {
               </div>
               <div className="space-y-2 text-sm opacity-90">
                 <div className="flex justify-between border-b border-white/20 pb-2">
-                  <span>Consulting — Apr</span>
+                  <span>Consulting, Apr</span>
                   <span>₹45,000</span>
                 </div>
                 <div className="flex justify-between border-b border-white/20 pb-2">
@@ -86,8 +87,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-[0.7rem] leading-relaxed opacity-60 max-w-xs">
-                Computer-generated under the GST Act. Print or save as PDF from
-                any browser.
+                Sample India GST invoice. Use Print in the browser to save a
+                PDF.
               </p>
             </div>
           </div>
@@ -96,48 +97,56 @@ export default function LandingPage() {
         <section className="border-t border-line bg-paper-deep/40">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
             <h2 className="page-title max-w-md">
-              One setup. Fifteen country packs.
+              Set your country once. Invoices follow that pack.
             </h2>
             <p className="mt-3 max-w-lg text-ink-muted">
-              Business profile lives in your browser. Switch country and the
-              invoice title, tax ID label, currency, and legal note update with
-              it.
+              Your business profile and invoices sit on your BillFora account,
+              so the same login works on the web app (desktop builds come
+              later). Change country and the title, tax ID label, currency, and
+              legal note update together.
             </p>
-            <ul className="mt-10 grid gap-8 sm:grid-cols-3">
-              {[
-                {
-                  title: "Country-correct layout",
-                  body: "GSTIN or EIN, Tax Invoice or Rechnung, DD/MM or MM/DD — baked into each pack.",
-                },
-                {
-                  title: "India GST done right",
-                  body: "Intra-state splits CGST and SGST. Tick interstate for IGST on the same form.",
-                },
-                {
-                  title: "Print to PDF",
-                  body: "No plugin. Open an invoice, hit print, and your browser saves a clean PDF.",
-                },
-              ].map((item, i) => (
-                <li
-                  key={item.title}
-                  className="animate-[fadeUp_0.6s_ease_both]"
-                  style={{ animationDelay: `${0.05 * (i + 1)}s` }}
-                >
-                  <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-ink">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                    {item.body}
-                  </p>
-                </li>
-              ))}
+            <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <li className="animate-[fadeUp_0.6s_ease_both]">
+                <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-ink">
+                  Country packs
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  Fifteen packs today. India uses GSTIN and Tax Invoice; the US
+                  uses EIN; Germany uses Rechnung and MwSt. Date order follows
+                  the pack too.
+                </p>
+              </li>
+              <li
+                className="animate-[fadeUp_0.6s_ease_both]"
+                style={{ animationDelay: "0.05s" }}
+              >
+                <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-ink">
+                  India GST split
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  Same-state bills split tax into CGST and SGST. Tick interstate
+                  and the form uses IGST instead.
+                </p>
+              </li>
+              <li
+                className="animate-[fadeUp_0.6s_ease_both]"
+                style={{ animationDelay: "0.1s" }}
+              >
+                <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-ink">
+                  Print to PDF
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  Open an invoice and use the browser print dialog. No extra
+                  plugin.
+                </p>
+              </li>
             </ul>
           </div>
         </section>
       </main>
 
       <footer className="border-t border-line py-6 text-center text-sm text-ink-muted">
-        BillFora · local-first MVP · no account required
+        BillFora · free plan includes 15 invoices per month
       </footer>
 
       <style>{`

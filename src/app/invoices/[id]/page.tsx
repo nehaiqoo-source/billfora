@@ -29,9 +29,11 @@ export default function InvoiceDetailPage({
     return (
       <AppShell title="Invoice">
         <div className="panel max-w-lg">
-          <p className="text-sm text-ink-muted">Business profile missing.</p>
+          <p className="text-sm text-ink-muted">
+            No business profile on this account yet.
+          </p>
           <Link href="/setup" className="btn btn-primary mt-4 inline-flex">
-            Go to setup
+            Open setup
           </Link>
         </div>
       </AppShell>

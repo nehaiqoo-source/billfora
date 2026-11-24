@@ -10,19 +10,19 @@ const PLANS = [
     id: "free",
     name: "Free",
     price: "₹0",
-    blurb: "15 invoices / month. Web access.",
+    blurb: "15 invoices per month on the web app.",
   },
   {
     id: "starter",
     name: "Starter",
     price: "₹399/mo",
-    blurb: "Unlimited invoices. Web + desktop download.",
+    blurb: "Unlimited invoices, plus Mac and Windows downloads when those builds ship.",
   },
   {
     id: "business",
     name: "Business",
     price: "₹999/mo",
-    blurb: "Team seats, GST reports, priority support.",
+    blurb: "Extra seats, GST report exports, and faster support.",
   },
 ];
 
@@ -38,7 +38,7 @@ export default function AccountPage() {
           <p className="text-sm text-ink-muted">Signed in as</p>
           <p className="mt-1 font-medium">{session?.user?.email}</p>
           <p className="mt-3 text-sm">
-            Current plan:{" "}
+            Plan:{" "}
             <span className="font-semibold capitalize text-teal">{plan}</span>
           </p>
         </div>
@@ -48,8 +48,8 @@ export default function AccountPage() {
             Plans
           </h2>
           <p className="mt-2 text-sm text-ink-muted">
-            Razorpay checkout comes next. Desktop Mac/Windows builds unlock on
-            paid plans — same login as the web app.
+            Checkout with Razorpay is not wired yet. Paid plans will unlock the
+            desktop apps under this same login.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {PLANS.map((p) => (
@@ -67,15 +67,15 @@ export default function AccountPage() {
                 </p>
                 <p className="mt-2 text-sm text-ink-muted">{p.blurb}</p>
                 {plan === p.id ? (
-                  <p className="mt-4 text-sm font-medium text-teal">Active</p>
+                  <p className="mt-4 text-sm font-medium text-teal">Your plan</p>
                 ) : (
                   <button
                     type="button"
                     className="btn btn-secondary mt-4 w-full text-sm"
                     disabled
-                    title="Razorpay wiring next"
+                    title="Razorpay not connected yet"
                   >
-                    Upgrade soon
+                    Upgrade (soon)
                   </button>
                 )}
               </div>
@@ -84,7 +84,6 @@ export default function AccountPage() {
         </section>
 
         <p className="text-sm text-ink-muted">
-          Need help?{" "}
           <Link href="/dashboard" className="text-teal underline">
             Back to dashboard
           </Link>

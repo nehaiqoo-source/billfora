@@ -37,7 +37,7 @@ export default function SignupPage() {
     });
     setLoading(false);
     if (login?.error) {
-      setError("Account created — please sign in");
+      setError("Account created. Sign in with the same email and password.");
       router.push("/login");
       return;
     }
@@ -58,7 +58,8 @@ export default function SignupPage() {
           Create account
         </h1>
         <p className="mt-2 text-sm text-ink-muted">
-          Free plan: 15 invoices / month. Upgrade anytime.
+          Free plan covers 15 invoices each month. Paid plans unlock more
+          later.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">
@@ -101,7 +102,7 @@ export default function SignupPage() {
             className="btn btn-primary w-full"
             disabled={loading}
           >
-            {loading ? "Creating…" : "Sign up free"}
+            {loading ? "Creating…" : "Create account"}
           </button>
         </form>
 

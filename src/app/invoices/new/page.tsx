@@ -91,10 +91,10 @@ export default function NewInvoicePage() {
       <AppShell title="New invoice">
         <div className="panel max-w-lg">
           <p className="text-sm text-ink-muted">
-            Set up your business profile before creating invoices.
+            Save your business profile first, then come back here.
           </p>
           <Link href="/setup" className="btn btn-primary mt-4 inline-flex">
-            Go to setup
+            Open setup
           </Link>
         </div>
       </AppShell>

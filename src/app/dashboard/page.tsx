@@ -58,7 +58,7 @@ export default function DashboardPage() {
           </Link>
           {!business ? (
             <Link href="/setup" className="btn btn-secondary">
-              Complete setup
+              Business setup
             </Link>
           ) : null}
         </>
@@ -67,14 +67,14 @@ export default function DashboardPage() {
       {!business ? (
         <div className="panel max-w-lg">
           <p className="font-[family-name:var(--font-display)] text-xl font-semibold">
-            Set up your business first
+            Finish business setup
           </p>
           <p className="mt-2 text-sm text-ink-muted">
-            Choose your country so invoices get the right tax labels, currency,
-            and legal note.
+            Pick your country and add your tax ID so new invoices use the right
+            currency, labels, and footer.
           </p>
           <Link href="/setup" className="btn btn-primary mt-5 inline-flex">
-            Go to setup
+            Open setup
           </Link>
         </div>
       ) : (
@@ -130,7 +130,7 @@ export default function DashboardPage() {
               <p className="text-sm text-ink-muted">
                 No invoices yet.{" "}
                 <Link href="/invoices/new" className="text-teal underline">
-                  Create your first
+                  Create one
                 </Link>
                 .
               </p>

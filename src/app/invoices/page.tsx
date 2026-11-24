@@ -31,10 +31,10 @@ export default function InvoicesPage() {
       {!business ? (
         <div className="panel max-w-lg">
           <p className="text-sm text-ink-muted">
-            Complete business setup before creating invoices.
+            Save your business profile before you create invoices.
           </p>
           <Link href="/setup" className="btn btn-primary mt-4 inline-flex">
-            Go to setup
+            Open setup
           </Link>
         </div>
       ) : data.invoices.length === 0 ? (
