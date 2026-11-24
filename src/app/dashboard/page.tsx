@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { getCountry } from "@/lib/countries";
-import { useAppData } from "@/lib/store";
+import { useCloudData } from "@/lib/cloud-store";
 import { formatMoney, computeInvoiceTotals } from "@/lib/tax";
 
 export default function DashboardPage() {
-  const data = useAppData();
+  const data = useCloudData();
   const business = data.business;
   const invoices = data.invoices;
+
+  if (data.loading) {
+    return (
+      <AppShell title="Dashboard">
+        <p className="text-ink-muted">Loading your account…</p>
+      </AppShell>
+    );
+  }
 
   const paid = invoices.filter((i) => i.status === "paid");
   const open = invoices.filter((i) => i.status !== "paid");

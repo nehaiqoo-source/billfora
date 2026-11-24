@@ -1,40 +1,45 @@
 # BillFora
 
-Country-aware invoice generator. Pick your country in setup; invoices use that country’s tax labels, currency, date format, invoice title, address order, and legal note.
+Country-aware invoice SaaS: **web now**, **desktop (Mac/Windows) next** — same login account.
 
-Data stays in the browser (`localStorage`). No database or env vars required for the MVP.
+## What works today
+
+- Email signup / sign in (Auth.js)
+- Cloud database (Prisma + SQLite locally; switch `DATABASE_URL` to Postgres in production)
+- Business setup with 15 country packs
+- Create / list / view / mark-paid invoices (per-user)
+- Free plan limit: **15 invoices / month**
+- Account page with plan stubs (Razorpay next)
 
 ## Quick start
 
 ```bash
+cp .env.example .env
 npm install
+npx prisma migrate dev --name init
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) → **Create free account**.
 
-1. Go to **Setup** and choose your country (and fill in business details).
-2. Create an invoice under **New invoice**.
-3. Open the invoice and use **Print / PDF** (`window.print`).
+## Product shape
 
-## MVP countries
-
-`IN`, `US`, `GB`, `AE`, `SG`, `AU`, `CA`, `DE`, `FR`, `NL`, `SA`, `ZA`, `BR`, `JP`, `NZ`
-
-India GST: CGST + SGST for intra-state; check **Interstate** for IGST.
-
-Invoice number prefixes follow the country pack (`INV-`, `RE-` for DE, `FAC-` for FR/NL, `NF-` for BR).
+| Surface | Status |
+| --- | --- |
+| Web app | Ready (this repo) |
+| Desktop Mac/Windows | Electron/Tauri wrapper + license check (same auth) |
+| Razorpay subscriptions | Stub on `/account` |
 
 ## Scripts
 
-| Command        | What it does              |
-| -------------- | ------------------------- |
-| `npm run dev`  | Local Next.js dev server  |
-| `npm run build`| Production build          |
-| `npm start`    | Serve the production build|
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Local Next.js + API |
+| `npm run build` | Production build |
+| `npx prisma studio` | Browse DB |
 
-## Deploy (Vercel)
+## Deploy
 
-Import the GitHub repo in Vercel. Framework preset: Next.js. Leave environment variables empty. Deploy.
-
-Primary repo: https://github.com/nehaiqoo-source/billfora
+1. Set `DATABASE_URL` (Postgres) and `AUTH_SECRET`
+2. `npx prisma migrate deploy`
+3. Deploy to Vercel

@@ -1,10 +1,10 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { InvoiceDocument } from "@/components/InvoiceDocument";
-import { updateInvoice, useAppData } from "@/lib/store";
+import { patchInvoiceCloud, useCloudData } from "@/lib/cloud-store";
 
 export default function InvoiceDetailPage({
   params,
@@ -12,9 +12,18 @@ export default function InvoiceDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const data = useAppData();
+  const data = useCloudData();
   const business = data.business;
   const invoice = data.invoices.find((i) => i.id === id);
+  const [busy, setBusy] = useState(false);
+
+  if (data.loading) {
+    return (
+      <AppShell title="Invoice">
+        <p className="text-ink-muted">Loading…</p>
+      </AppShell>
+    );
+  }
 
   if (!business) {
     return (
@@ -33,9 +42,7 @@ export default function InvoiceDetailPage({
     return (
       <AppShell title="Invoice">
         <div className="panel max-w-lg">
-          <p className="text-sm text-ink-muted">
-            Invoice not found in this browser&apos;s storage.
-          </p>
+          <p className="text-sm text-ink-muted">Invoice not found.</p>
           <Link href="/invoices" className="btn btn-secondary mt-4 inline-flex">
             Back to invoices
           </Link>
@@ -44,12 +51,14 @@ export default function InvoiceDetailPage({
     );
   }
 
-  function markPaid() {
-    updateInvoice({
-      ...invoice!,
-      status: "paid",
-      updatedAt: new Date().toISOString(),
-    });
+  async function markPaid() {
+    setBusy(true);
+    try {
+      await patchInvoiceCloud(invoice!.id, { status: "paid" });
+      await data.refresh();
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -58,7 +67,12 @@ export default function InvoiceDetailPage({
       actions={
         <>
           {invoice.status !== "paid" ? (
-            <button type="button" className="btn btn-secondary" onClick={markPaid}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              disabled={busy}
+              onClick={() => void markPaid()}
+            >
               Mark paid
             </button>
           ) : (

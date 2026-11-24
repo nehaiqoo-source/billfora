@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { useAppData } from "@/lib/store";
+import { useCloudData } from "@/lib/cloud-store";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/invoices", label: "Invoices" },
   { href: "/invoices/new", label: "New invoice" },
   { href: "/setup", label: "Setup" },
+  { href: "/account", label: "Account" },
 ];
 
 export function AppShell({
@@ -22,7 +24,8 @@ export function AppShell({
   actions?: ReactNode;
 }) {
   const pathname = usePathname();
-  const data = useAppData();
+  const { data: session } = useSession();
+  const data = useCloudData();
   const businessName = data.business?.name;
 
   return (
@@ -58,15 +61,30 @@ export function AppShell({
               })}
             </nav>
           </div>
-          {businessName ? (
-            <p className="truncate text-sm text-ink-muted max-w-[10rem] sm:max-w-xs">
-              {businessName}
-            </p>
-          ) : (
-            <Link href="/setup" className="btn btn-primary text-sm py-1.5 px-3">
-              Set up business
-            </Link>
-          )}
+          <div className="flex items-center gap-3">
+            {businessName ? (
+              <p className="truncate text-sm text-ink-muted max-w-[8rem] sm:max-w-xs">
+                {businessName}
+              </p>
+            ) : (
+              <Link href="/setup" className="btn btn-primary text-sm py-1.5 px-3">
+                Set up business
+              </Link>
+            )}
+            {session?.user ? (
+              <button
+                type="button"
+                className="btn btn-ghost text-sm py-1.5 px-2"
+                onClick={() => signOut({ callbackUrl: "/" })}
+              >
+                Sign out
+              </button>
+            ) : (
+              <Link href="/login" className="btn btn-ghost text-sm py-1.5 px-2">
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
         <nav className="sm:hidden flex gap-1 overflow-x-auto border-t border-line/60 px-3 py-2">
           {NAV.map((item) => {
@@ -76,9 +94,7 @@ export function AppShell({
                 key={item.href}
                 href={item.href}
                 className={`shrink-0 rounded-md px-3 py-1 text-xs font-medium ${
-                  active
-                    ? "bg-teal-soft text-teal"
-                    : "text-ink-muted"
+                  active ? "bg-teal-soft text-teal" : "text-ink-muted"
                 }`}
               >
                 {item.label}

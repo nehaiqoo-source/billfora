@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { AppShell } from "@/components/AppShell";
 import { getCountry } from "@/lib/countries";
-import { useAppData } from "@/lib/store";
+import { useCloudData } from "@/lib/cloud-store";
 import { computeInvoiceTotals, formatDate, formatMoney } from "@/lib/tax";
 
 export default function InvoicesPage() {
-  const data = useAppData();
+  const data = useCloudData();
   const business = data.business;
   const country = business ? getCountry(business.countryCode) : null;
+
+  if (data.loading) {
+    return (
+      <AppShell title="Invoices">
+        <p className="text-ink-muted">Loading…</p>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell

@@ -8,11 +8,11 @@ export default function LandingPage() {
           BillFora
         </span>
         <nav className="flex items-center gap-2">
-          <Link href="/setup" className="btn btn-ghost hidden sm:inline-flex">
-            Business setup
+          <Link href="/login" className="btn btn-ghost hidden sm:inline-flex">
+            Sign in
           </Link>
-          <Link href="/dashboard" className="btn btn-secondary">
-            Open app
+          <Link href="/signup" className="btn btn-secondary">
+            Get started
           </Link>
         </nav>
       </header>
@@ -32,11 +32,11 @@ export default function LandingPage() {
               splits, date formats, and legal footnotes follow automatically.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/setup" className="btn btn-primary">
-                Start with your country
+              <Link href="/signup" className="btn btn-primary">
+                Create free account
               </Link>
-              <Link href="/invoices/new" className="btn btn-secondary">
-                Create an invoice
+              <Link href="/login" className="btn btn-secondary">
+                Sign in
               </Link>
             </div>
           </div>

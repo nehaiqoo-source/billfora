@@ -6,11 +6,7 @@ import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { AppShell } from "@/components/AppShell";
 import { getCountry } from "@/lib/countries";
-import {
-  formatInvoiceNumber,
-  saveInvoice,
-  useAppData,
-} from "@/lib/store";
+import { createInvoiceCloud, useCloudData } from "@/lib/cloud-store";
 import {
   computeInvoiceTotals,
   formatMoney,
@@ -55,7 +51,7 @@ function plusDaysISO(days: number): string {
 }
 
 export default function NewInvoicePage() {
-  const data = useAppData();
+  const data = useCloudData();
   const router = useRouter();
   const business = data.business;
 
@@ -66,6 +62,16 @@ export default function NewInvoicePage() {
   const [notes, setNotes] = useState("");
   const [interstate, setInterstate] = useState(false);
   const [taxSynced, setTaxSynced] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (data.loading) {
+    return (
+      <AppShell title="New invoice">
+        <p className="text-ink-muted">Loading…</p>
+      </AppShell>
+    );
+  }
 
   useEffect(() => {
     if (business && !taxSynced) {
@@ -114,33 +120,31 @@ export default function NewInvoicePage() {
     setItems((prev) => (prev.length <= 1 ? prev : prev.filter((i) => i.id !== id)));
   }
 
-  function persist(status: "draft" | "sent") {
-    const id = uuidv4();
-    const number = formatInvoiceNumber(
-      country.numberPrefix,
-      data.nextInvoiceSeq
-    );
-    const now = new Date().toISOString();
-    const invoice = {
-      id,
-      number,
-      status,
-      issueDate,
-      dueDate,
-      client,
-      items: items.map((it) => ({
-        ...it,
-        quantity: Number(it.quantity) || 0,
-        rate: Number(it.rate) || 0,
-        taxRate: Number(it.taxRate) || 0,
-      })),
-      notes,
-      interstate: country.gstSplit ? interstate : undefined,
-      createdAt: now,
-      updatedAt: now,
-    };
-    saveInvoice(invoice, true);
-    router.push(`/invoices/${id}`);
+  async function persist(status: "draft" | "sent") {
+    setSaving(true);
+    setError(null);
+    try {
+      const invoice = await createInvoiceCloud({
+        status,
+        issueDate,
+        dueDate,
+        notes,
+        interstate: country.gstSplit ? interstate : false,
+        client,
+        items: items.map((it) => ({
+          ...it,
+          quantity: Number(it.quantity) || 0,
+          rate: Number(it.rate) || 0,
+          taxRate: Number(it.taxRate) || 0,
+        })),
+      });
+      await data.refresh();
+      router.push(`/invoices/${invoice.id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save invoice");
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -151,20 +155,25 @@ export default function NewInvoicePage() {
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={() => persist("draft")}
+            disabled={saving}
+            onClick={() => void persist("draft")}
           >
             Save draft
           </button>
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => persist("sent")}
+            disabled={saving}
+            onClick={() => void persist("sent")}
           >
-            Create &amp; view
+            {saving ? "Saving…" : "Create & view"}
           </button>
         </>
       }
     >
+      {error ? (
+        <p className="no-print mb-4 text-sm text-red-700">{error}</p>
+      ) : null}
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         <div className="space-y-6">
           <section className="panel space-y-4">
@@ -403,7 +412,7 @@ export default function NewInvoicePage() {
           <p className="text-sm text-ink-muted">
             Next number:{" "}
             <span className="font-medium text-ink">
-              {formatInvoiceNumber(country.numberPrefix, data.nextInvoiceSeq)}
+              {`${country.numberPrefix}${String(data.nextInvoiceSeq).padStart(4, "0")}`}
             </span>
           </p>
           <div className="flex justify-between text-sm">
