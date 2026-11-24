@@ -1,6 +1,6 @@
 # BillFora
 
-Invoice app for businesses that sell in more than one country’s tax format. The web app is ready; Mac and Windows desktop builds will use the same login.
+Invoice app for businesses that sell in more than one country’s tax format. Same account on web, mobile, and desktop.
 
 ## What’s in this repo
 
@@ -9,7 +9,9 @@ Invoice app for businesses that sell in more than one country’s tax format. Th
 - Business setup with 15 country packs
 - Create, list, view, and mark invoices paid
 - Free plan: 15 invoices per month
-- `/account` shows plan stubs (Razorpay checkout not wired yet)
+- Mobile app (`mobile/`) — Expo, Bearer token login, invoice list + detail
+- Desktop shell (`desktop/`) — Electron window around the web app
+- `/account` shows plan stubs (Razorpay still last)
 
 ## Quick start
 
@@ -22,13 +24,38 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) and create an account.
 
+## Live
+
+Production: [https://billfora.vercel.app](https://billfora.vercel.app)
+
+Demo login: `demo@billfora.app` / `demo1234`
+
+Postgres is on Prisma’s create-db (claim it so it is not deleted after 24h).
+
+### Mobile
+
+```bash
+cd mobile && npm install && npm start
+```
+
+Needs the web API running. See `mobile/README.md` for device / LAN URLs.
+
+### Desktop
+
+```bash
+cd desktop && npm install && npm run dev
+```
+
+Opens localhost:3000 in an Electron window. See `desktop/README.md`.
+
 ## Surfaces
 
 | Surface | Status |
 | --- | --- |
-| Web app | Ready in this repo |
-| Desktop (Mac / Windows) | Planned: Electron or Tauri wrapper with the same auth |
-| Razorpay subscriptions | Stub UI on `/account` |
+| Web app | Ready |
+| Mobile (Expo iOS + Android) | Login + invoices in `mobile/` |
+| Desktop (Electron) | Shell in `desktop/` |
+| Razorpay subscriptions | Stub on `/account` — do this last |
 
 ## Scripts
 

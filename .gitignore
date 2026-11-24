@@ -1,5 +1,7 @@
 # dependencies
 /node_modules
+/mobile/node_modules
+/desktop/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -44,3 +46,4 @@ yarn-error.log*
 .claude/
 .windsurf/
 skills-lock.json
+.vercel

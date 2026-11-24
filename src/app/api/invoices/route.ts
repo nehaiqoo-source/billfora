@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCountry, type CountryCode } from "@/lib/countries";
+import { getRequestUser } from "@/lib/request-user";
 
 const clientSchema = z.object({
   name: z.string(),
@@ -64,16 +64,16 @@ function serializeInvoice(row: {
   };
 }
 
-export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
+export async function GET(req: Request) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const [business, rows] = await Promise.all([
-    prisma.business.findUnique({ where: { userId: session.user.id } }),
+    prisma.business.findUnique({ where: { userId: user.id } }),
     prisma.invoice.findMany({
-      where: { userId: session.user.id },
+      where: { userId: user.id },
       orderBy: { createdAt: "desc" },
     }),
   ]);
@@ -82,13 +82,13 @@ export async function GET() {
     business,
     invoices: rows.map(serializeInvoice),
     nextInvoiceSeq: business?.nextInvoiceSeq ?? 1,
-    plan: session.user.plan,
+    plan: user.plan,
   });
 }
 
 export async function POST(req: Request) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
   }
 
   const business = await prisma.business.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
   });
   if (!business) {
     return NextResponse.json(
@@ -107,13 +107,12 @@ export async function POST(req: Request) {
     );
   }
 
-  // Free plan: 15 invoices / month
-  if (session.user.plan === "free") {
+  if (user.plan === "free") {
     const start = new Date();
     start.setDate(1);
     start.setHours(0, 0, 0, 0);
     const count = await prisma.invoice.count({
-      where: { userId: session.user.id, createdAt: { gte: start } },
+      where: { userId: user.id, createdAt: { gte: start } },
     });
     if (count >= 15) {
       return NextResponse.json(
@@ -133,7 +132,7 @@ export async function POST(req: Request) {
   const invoice = await prisma.$transaction(async (tx) => {
     const created = await tx.invoice.create({
       data: {
-        userId: session.user!.id,
+        userId: user.id,
         number,
         status: parsed.data.status,
         issueDate: parsed.data.issueDate,
@@ -145,7 +144,7 @@ export async function POST(req: Request) {
       },
     });
     await tx.business.update({
-      where: { userId: session.user!.id },
+      where: { userId: user.id },
       data: { nextInvoiceSeq: seq + 1 },
     });
     return created;

@@ -1,0 +1,13 @@
+{
+  "name": "billfora-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0"
+  }
+}

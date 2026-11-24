@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getRequestUser } from "@/lib/request-user";
 
 const businessSchema = z.object({
   name: z.string().min(1),
@@ -17,22 +17,22 @@ const businessSchema = z.object({
   defaultTaxRate: z.number().min(0).max(100),
 });
 
-export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
+export async function GET(req: Request) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const business = await prisma.business.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
   });
 
   return NextResponse.json({ business });
 }
 
 export async function PUT(req: Request) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -43,9 +43,9 @@ export async function PUT(req: Request) {
 
   const data = parsed.data;
   const business = await prisma.business.upsert({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
     create: {
-      userId: session.user.id,
+      userId: user.id,
       ...data,
     },
     update: data,

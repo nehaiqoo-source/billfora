@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getRequestUser } from "@/lib/request-user";
 
 const patchSchema = z.object({
   status: z.enum(["draft", "sent", "paid"]).optional(),
@@ -38,22 +38,22 @@ function serializeInvoice(row: {
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function GET(_req: Request, ctx: Ctx) {
-  const session = await auth();
-  if (!session?.user?.id) {
+export async function GET(req: Request, ctx: Ctx) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { id } = await ctx.params;
   const row = await prisma.invoice.findFirst({
-    where: { id, userId: session.user.id },
+    where: { id, userId: user.id },
   });
   if (!row) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   const business = await prisma.business.findUnique({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
   });
 
   return NextResponse.json({
@@ -63,8 +63,8 @@ export async function GET(_req: Request, ctx: Ctx) {
 }
 
 export async function PATCH(req: Request, ctx: Ctx) {
-  const session = await auth();
-  if (!session?.user?.id) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -75,7 +75,7 @@ export async function PATCH(req: Request, ctx: Ctx) {
   }
 
   const existing = await prisma.invoice.findFirst({
-    where: { id, userId: session.user.id },
+    where: { id, userId: user.id },
   });
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -89,15 +89,15 @@ export async function PATCH(req: Request, ctx: Ctx) {
   return NextResponse.json({ invoice: serializeInvoice(row) });
 }
 
-export async function DELETE(_req: Request, ctx: Ctx) {
-  const session = await auth();
-  if (!session?.user?.id) {
+export async function DELETE(req: Request, ctx: Ctx) {
+  const user = await getRequestUser(req);
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { id } = await ctx.params;
   const existing = await prisma.invoice.findFirst({
-    where: { id, userId: session.user.id },
+    where: { id, userId: user.id },
   });
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
