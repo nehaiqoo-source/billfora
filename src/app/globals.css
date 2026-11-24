@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f3efe6;
+  --color-paper-deep: #e8e2d4;
+  --color-ink: #1c1914;
+  --color-ink-muted: #5c564c;
+  --color-teal: #0f5c4c;
+  --color-teal-hover: #0a463a;
+  --color-teal-soft: #d8ebe5;
+  --color-line: #d4cbb8;
+  --color-danger: #8b2e2e;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(
+        ellipse 80% 50% at 10% -10%,
+        rgba(15, 92, 76, 0.08),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 60% 40% at 100% 0%,
+        rgba(28, 25, 20, 0.04),
+        transparent 50%
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 23px,
+        rgba(28, 25, 20, 0.015) 24px
+      );
+  }
+
+  ::selection {
+    background: var(--color-teal-soft);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.375rem;
+    padding: 0.625rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn-primary {
+    background-color: var(--color-teal);
+    color: #f7f4ee;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-teal-hover);
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--color-ink);
+    border: 1.5px solid var(--color-line);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-teal);
+    color: var(--color-teal);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink-muted);
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-teal);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .field label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    border: 1.5px solid var(--color-line);
+    background: #faf8f3;
+    border-radius: 0.375rem;
+    padding: 0.55rem 0.75rem;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    outline: none;
+    transition: border-color 140ms ease, box-shadow 140ms ease;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--color-teal);
+    box-shadow: 0 0 0 3px rgba(15, 92, 76, 0.12);
+  }
+
+  .panel {
+    background: rgba(250, 248, 243, 0.85);
+    border: 1.5px solid var(--color-line);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+}
+
+@media print {
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .invoice-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  @page {
+    margin: 12mm;
+  }
+}
