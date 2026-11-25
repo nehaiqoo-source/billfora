@@ -16,6 +16,8 @@ export default function InvoiceDetailPage({
   const business = data.business;
   const invoice = data.invoices.find((i) => i.id === id);
   const [busy, setBusy] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareMsg, setShareMsg] = useState<string | null>(null);
 
   if (data.loading) {
     return (
@@ -63,6 +65,29 @@ export default function InvoiceDetailPage({
     }
   }
 
+  async function copyShareLink() {
+    setBusy(true);
+    setShareMsg(null);
+    try {
+      const res = await fetch(`/api/invoices/${invoice!.id}/share`, {
+        method: "POST",
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json.error || "Could not create share link");
+      }
+      const url = json.shareUrl as string;
+      setShareUrl(url);
+      await navigator.clipboard.writeText(url);
+      setShareMsg("Link copied");
+      await data.refresh();
+    } catch (e) {
+      setShareMsg(e instanceof Error ? e.message : "Share failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <AppShell
       title={invoice.number}
@@ -84,6 +109,14 @@ export default function InvoiceDetailPage({
           )}
           <button
             type="button"
+            className="btn btn-secondary"
+            disabled={busy}
+            onClick={() => void copyShareLink()}
+          >
+            Copy share link
+          </button>
+          <button
+            type="button"
             className="btn btn-primary"
             onClick={() => window.print()}
           >
@@ -95,6 +128,19 @@ export default function InvoiceDetailPage({
         </>
       }
     >
+      {shareMsg || shareUrl ? (
+        <p className="no-print mb-4 text-sm text-ink-muted">
+          {shareMsg}
+          {shareUrl ? (
+            <>
+              {" · "}
+              <a href={shareUrl} className="text-teal underline break-all">
+                {shareUrl}
+              </a>
+            </>
+          ) : null}
+        </p>
+      ) : null}
       <InvoiceDocument invoice={invoice} business={business} />
     </AppShell>
   );

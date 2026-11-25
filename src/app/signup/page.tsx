@@ -58,8 +58,8 @@ export default function SignupPage() {
           Create account
         </h1>
         <p className="mt-2 text-sm text-ink-muted">
-          Free plan covers 15 invoices each month. Paid plans unlock more
-          later.
+          Built for freelancers who bill across borders. Free plan covers 15
+          invoices each month.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-4">

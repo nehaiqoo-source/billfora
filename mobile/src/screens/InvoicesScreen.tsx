@@ -65,7 +65,7 @@ export function InvoicesScreen({ navigation }: Props) {
         <View style={styles.headerActions}>
           <Pressable
             style={styles.newBtn}
-            onPress={() => navigation.navigate("NewInvoice")}
+            onPress={() => navigation.navigate("FastCreate")}
           >
             <Text style={styles.newBtnText}>New</Text>
           </Pressable>
@@ -105,9 +105,9 @@ export function InvoicesScreen({ navigation }: Props) {
               <Text style={styles.empty}>No invoices yet.</Text>
               <Pressable
                 style={styles.retry}
-                onPress={() => navigation.navigate("NewInvoice")}
+                onPress={() => navigation.navigate("FastCreate")}
               >
-                <Text style={styles.retryText}>Create invoice</Text>
+                <Text style={styles.retryText}>Quick invoice</Text>
               </Pressable>
             </View>
           }

@@ -3,13 +3,14 @@ import {
   ActivityIndicator,
   Pressable,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { fetchInvoice, patchInvoiceStatus } from "../api";
+import { createShareLink, fetchInvoice, patchInvoiceStatus } from "../api";
 import { useAuth } from "../auth";
 import type { RootStackParamList } from "../navigation";
 
@@ -67,6 +68,22 @@ export function InvoiceDetailScreen({ route }: Props) {
       setInvoice({ ...invoice, status });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Update failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function shareLink() {
+    if (!token || !invoice) return;
+    setBusy(true);
+    try {
+      const { shareUrl } = await createShareLink(token, id);
+      await Share.share({
+        message: `${invoice.number} — ${shareUrl}`,
+        url: shareUrl,
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Share failed");
     } finally {
       setBusy(false);
     }
@@ -148,6 +165,14 @@ export function InvoiceDetailScreen({ route }: Props) {
         </View>
       ) : null}
 
+      <Pressable
+        style={[styles.shareBtn, busy && { opacity: 0.6 }]}
+        disabled={busy}
+        onPress={() => void shareLink()}
+      >
+        <Text style={styles.shareBtnText}>Share invoice link</Text>
+      </Pressable>
+
       <Text style={[styles.label, { marginTop: 20 }]}>Mark as</Text>
       <View style={styles.actions}>
         {(["draft", "sent", "paid"] as const).map((s) => (
@@ -198,6 +223,14 @@ const styles = StyleSheet.create({
   lineDesc: { fontSize: 15, fontWeight: "600", color: "#0f172a" },
   totals: { marginTop: 16, alignItems: "flex-end", gap: 4 },
   total: { fontSize: 18, fontWeight: "700", color: "#0f172a", marginTop: 4 },
+  shareBtn: {
+    marginTop: 20,
+    backgroundColor: "#0b1412",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  shareBtnText: { color: "#fff", fontWeight: "700", fontSize: 15 },
   actions: { flexDirection: "row", gap: 8, marginTop: 10 },
   chip: {
     paddingHorizontal: 14,

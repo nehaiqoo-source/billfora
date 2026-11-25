@@ -122,3 +122,11 @@ export async function createInvoice(token: string, body: CreateInvoiceInput) {
   });
   return parseJson(res) as Promise<{ invoice: InvoiceListItem }>;
 }
+
+export async function createShareLink(token: string, id: string) {
+  const res = await fetch(`${API_BASE}/api/invoices/${id}/share`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return parseJson(res) as Promise<{ shareUrl: string }>;
+}

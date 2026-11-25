@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f3efe6;
-  --color-paper-deep: #e8e2d4;
-  --color-ink: #1c1914;
-  --color-ink-muted: #5c564c;
-  --color-teal: #0f5c4c;
-  --color-teal-hover: #0a463a;
-  --color-teal-soft: #d8ebe5;
-  --color-line: #d4cbb8;
+  --color-paper: #f2f5f4;
+  --color-paper-deep: #e6ece9;
+  --color-ink: #14201c;
+  --color-ink-muted: #4a5a54;
+  --color-teal: #1f6f5c;
+  --color-teal-hover: #175647;
+  --color-teal-soft: #d5ebe4;
+  --color-line: #d5ddd9;
   --color-danger: #8b2e2e;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
@@ -26,20 +26,14 @@
     min-height: 100vh;
     background-image:
       radial-gradient(
-        ellipse 80% 50% at 10% -10%,
-        rgba(15, 92, 76, 0.08),
+        ellipse 70% 45% at 0% 0%,
+        rgba(47, 155, 132, 0.07),
         transparent 55%
       ),
       radial-gradient(
-        ellipse 60% 40% at 100% 0%,
-        rgba(28, 25, 20, 0.04),
+        ellipse 50% 35% at 100% 0%,
+        rgba(20, 32, 28, 0.04),
         transparent 50%
-      ),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 23px,
-        rgba(28, 25, 20, 0.015) 24px
       );
   }
 
@@ -175,5 +169,27 @@
 
   @page {
     margin: 12mm;
+  }
+}
+
+@keyframes bfFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bfSlide {
+  from {
+    opacity: 0.4;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

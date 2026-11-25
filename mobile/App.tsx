@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider, useAuth } from "./src/auth";
 import type { RootStackParamList } from "./src/navigation";
+import { FastCreateScreen } from "./src/screens/FastCreateScreen";
 import { InvoiceDetailScreen } from "./src/screens/InvoiceDetailScreen";
 import { InvoicesScreen } from "./src/screens/InvoicesScreen";
 import { LoginScreen } from "./src/screens/LoginScreen";
@@ -39,9 +40,14 @@ function RootNav() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="FastCreate"
+              component={FastCreateScreen}
+              options={{ title: "Quick invoice", headerBackTitle: "Back" }}
+            />
+            <Stack.Screen
               name="NewInvoice"
               component={NewInvoiceScreen}
-              options={{ title: "New invoice", headerBackTitle: "Back" }}
+              options={{ title: "Full invoice", headerBackTitle: "Back" }}
             />
             <Stack.Screen
               name="InvoiceDetail"

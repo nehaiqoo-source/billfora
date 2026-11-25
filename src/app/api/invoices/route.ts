@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getCountry, type CountryCode } from "@/lib/countries";
 import { getRequestUser } from "@/lib/request-user";
+import { newShareToken, serializeInvoice } from "@/lib/invoice-serialize";
 
 const clientSchema = z.object({
   name: z.string(),
@@ -35,34 +36,6 @@ const createSchema = z.object({
   client: clientSchema,
   items: z.array(lineSchema).min(1),
 });
-
-function serializeInvoice(row: {
-  id: string;
-  number: string;
-  status: string;
-  issueDate: string;
-  dueDate: string;
-  notes: string;
-  interstate: boolean;
-  clientJson: string;
-  itemsJson: string;
-  createdAt: Date;
-  updatedAt: Date;
-}) {
-  return {
-    id: row.id,
-    number: row.number,
-    status: row.status,
-    issueDate: row.issueDate,
-    dueDate: row.dueDate,
-    notes: row.notes,
-    interstate: row.interstate,
-    client: JSON.parse(row.clientJson),
-    items: JSON.parse(row.itemsJson),
-    createdAt: row.createdAt.toISOString(),
-    updatedAt: row.updatedAt.toISOString(),
-  };
-}
 
 export async function GET(req: Request) {
   const user = await getRequestUser(req);
@@ -128,6 +101,9 @@ export async function POST(req: Request) {
   const pack = getCountry(business.countryCode as CountryCode);
   const seq = business.nextInvoiceSeq;
   const number = `${pack.numberPrefix}${String(seq).padStart(4, "0")}`;
+  const shouldShare =
+    parsed.data.status === "sent" || parsed.data.status === "paid";
+  const shareToken = shouldShare ? newShareToken() : null;
 
   const invoice = await prisma.$transaction(async (tx) => {
     const created = await tx.invoice.create({
@@ -141,6 +117,8 @@ export async function POST(req: Request) {
         interstate: parsed.data.interstate ?? false,
         clientJson: JSON.stringify(parsed.data.client),
         itemsJson: JSON.stringify(parsed.data.items),
+        shareToken,
+        sharedAt: shareToken ? new Date() : null,
       },
     });
     await tx.business.update({

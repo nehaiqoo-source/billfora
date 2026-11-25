@@ -49,6 +49,7 @@ export type Invoice = {
   notes: string;
   /** India only: true = IGST (interstate), false = CGST+SGST (intra-state) */
   interstate?: boolean;
+  shareToken?: string | null;
   createdAt: string;
   updatedAt: string;
 };

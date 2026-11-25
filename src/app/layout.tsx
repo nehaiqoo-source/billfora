@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s · BillFora",
   },
   description:
-    "Create invoices for your country’s tax labels, currency, and date format. Sign up on the web; desktop apps will use the same account.",
+    "Invoice clients in India, the US, the EU, and more from one BillFora account — local tax labels, currency, and shareable invoice links.",
 };
 
 export default function RootLayout({
